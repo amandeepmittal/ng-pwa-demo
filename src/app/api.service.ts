@@ -6,7 +6,6 @@ export interface Item {
   hits: [];
   title: string;
   url: string;
-  author: string;
 }
 
 
@@ -18,7 +17,7 @@ export class ApiService {
 
   constructor(private httpClient: HttpClient) {}
 
-  fetch(): Observable<Item[]> {
+  getData(): Observable<Item[]> {
     return <Observable<Item[]>this.httpClient.get(this.dataURL);
   }
 }

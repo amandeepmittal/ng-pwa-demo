@@ -1,0 +1,122 @@
+.comment p,
+.comment + p {
+  line-height: 16px;
+  margin: 8px 0 0 0;
+}
+
+.comment u,
+.comment u a,
+.comment u a:visited,
+.comment + p u,
+.comment + p u a,
+.comment + p u a:visited {
+  color: #777;
+  text-decoration: none;
+}
+
+.subtext {
+  font-family: 'Lucida Grande', 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  height: 20px;
+  vertical-align: top;
+}
+
+.title {
+  color: #ccc;
+  font-family: 'Lucida Grande', 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  margin: 0;
+}
+
+body > center > table {
+  background-color: transparent;
+  width: 100%;
+}
+
+body > center > table > tbody > tr > td > table {
+  margin: 0 auto;
+  width: 960px;
+}
+
+.header {
+  background-image: -webkit-linear-gradient(top, #f60, #f70);
+  border-bottom: solid 1px #f60;
+  box-shadow: 0 2px rgba(0, 0, 0, 0.1);
+  align: center;
+  padding: 5px;
+  font-family: 'Lucida Grande', 'Segoe UI', Arial, Helvetica, sans-serif;
+}
+
+body > center > table > tbody > tr:first-child > td > table {
+  margin: 0 auto;
+  padding: 7px !important;
+  width: 960px;
+}
+
+body
+  > center
+  > table
+  > tbody
+  > tr:first-child
+  > td
+  > table
+  > tbody
+  > tr
+  > td:first-child {
+  padding-right: 10px;
+}
+
+body > center > table > tbody > tr:nth-child(3) > td {
+  padding: 10px 0;
+}
+
+body > center > table > tbody > tr:nth-child(3) > td > form {
+  margin: 0 auto;
+  width: 960px;
+}
+
+body > center > table > tbody > tr:nth-child(3) > td > table {
+  margin: 0 auto;
+  width: 960px;
+}
+
+body
+  > center
+  > table
+  > tbody
+  > tr:nth-child(3)
+  > td
+  > table
+  > tbody
+  > tr:first-child
+  > td:nth-child(2).title
+  > a {
+  font-size: 18px;
+}
+
+ul,
+.comment,
+.default,
+.comhead,
+.yclinks,
+.dead {
+  font-family: 'Lucida Grande', 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 15px;
+}
+
+li a {
+  text-decoration: none;
+  color: #4d4d4d;
+}
