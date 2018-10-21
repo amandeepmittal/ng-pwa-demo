@@ -97,7 +97,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Item {
-  hits: [];
   title: string;
   url: string;
 }
@@ -107,7 +106,7 @@ export interface Item {
   providedIn: 'root'
 })
 export class ApiService {
-  private dataURL: string = 'http://hn.algolia.com/api/v1/search_by_date?tags=story';
+  private dataURL: string = 'https://api.hnpwa.com/v0/news/1.json';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -121,7 +120,7 @@ Then we inject an `Observable` from the library `rxjs` (which stands for Reactiv
 
 `rxjs` library is providing us the ability to use `Observable` as the part of the JavaScript language and unil it becomes a native type of the language itself.
 
-After importing the necessary dependencies, declare an `Item` interface that represents a single item of the returned JSON data. For the demonstration purpose I am using the **Hacker News API** provided by _algolia_ search. It is CORS enabled so you do not have to worry about that. The API gives a lot of data but we only need few things from it. You can test the API URL `http://hn.algolia.com/api/v1/search_by_date?tags=story` in any REST client to see what are the results.
+After importing the necessary dependencies, declare an `Item` interface that represents a single item of the returned JSON data. For the demonstration purpose I am using the **Hacker News API**. It is CORS enabled so you do not have to worry about that. The API gives a lot of data but we only need few things from it. You can test the API URL `https://api.hnpwa.com/v0/news/1.json` in any REST client to see what are the results.
 
 (ss5)
 
@@ -156,8 +155,8 @@ export class AppComponent implements OnInit {
   fetchData() {
     this.apiService.getData().subscribe(
       (data: Array<Item>) => {
-        console.log(data.hits);
-        this.items = data.hits;
+        console.log(data);
+        this.items = data;
       },
       err => {
         console.log(err);
@@ -202,7 +201,7 @@ Open up `app.component.html` add the following markup.
 </ul>
 ```
 
-I am also adding basic CSS styles so do add them inside `app.component.css`.
+The incoming data from the JSON API endpoint is in an array of objects. To display the fields such as title of the post and the URL, we are going to traverse the array using `*ngFor*` as the attribute to the unordered list element. I am also adding basic CSS styles so do add them inside `app.component.css`.
 
 ```css
 .subtext {
@@ -278,8 +277,168 @@ li a {
 }
 ```
 
-We only need one component file for our app since there is not much going in our app UI wise, however, if you take a look at the `http://localhost:4200` you will see something similar.
+We only need one component file for our app since there is not much going in our app UI wise. If you take a look at the `http://localhost:4200` you will see something similar.
 
 (ss8)
 
 Our demo app is ready, now all we need is to convert it into a Progressive Web Application.
+
+## Building the PWA
+
+After building the web application when you start to convert it to a Progressive Web App, you will have to build for production. Most PWA features are not compatible in development mode. You cannot trigger the execution of service workers, caching, etc. To build our current Angular application for production all we have to run is the following command from the terminal.
+
+```shell
+ng build --prod
+```
+
+This will create a `dist/ng-pwa-demo/` directory in the root of our Angular project. We will use an npm tool like **serve** to the serve the content inside the dist folder without setting up the backend. Install this tool from npm.
+
+```shell
+npm install -g serve
+```
+
+Then traverse into `dist/ng-pwa-demo/` from the terminal and type the below command.
+
+```shell
+serve
+```
+
+From the web browser you can navigate to `http:localhost:5000/` to see the result. Now let us first audit and see what is missing or what steps we need to take to convert this app into a PWA.
+
+Go to the developer tools in the Chrome Browser and click on the `Audits` panel. First choose `Mobile` instead of Desktop and then choose `Progressive Web App` option only. Uncheck everything else as we are going to run the audit only for a PWA. Lastly, hit the `Run audit` button. Once the process of auditing is complete, it will generate report and showcase it to you like below.
+
+(ss9)
+
+Lighthouse performs various checks to validate different aspects of a Progressive Web App. These aspects and more details about each of them are mentioned at [PWA Checklist](https://developers.google.com/web/progressive-web-apps/checklist). This guide not only covers the basics and details about the different PWA terminology but also offers a way to fix them.
+
+(ss10)
+
+We are getting an initial score of 46 and four of the audits are currently being passed. Our Angular app currently fails in 7 other audits related to no value of brand theme color provided, registration of a service worker, redirect from HTTP traffic to HTTPS, etc.
+
+Angular CLI allows you to add PWA features to an existing application by runing a simple command from the terminal described below.
+
+```shell
+ng add @angular/pwa
+```
+
+This command automatically add basic configuration required for an angular app to turn into a PWA and starts by creating a new file called `manifest.json`, adding different sizes of icons as assets and registering a service worker inside the file called `ngsw-config.json`. After that, run the production build command again.
+
+```shell
+ng build --prod
+```
+
+This command will register and include all the necessary files inside the `dist` directory. A `manifest.json` file looks like below.
+
+```json
+{
+  "name": "ng-pwa-demo",
+  "short_name": "ng-pwa-demo",
+  "theme_color": "#1976d2",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+```
+
+This is how our latest `dist` directory looks like.
+
+(ss11)
+
+To change the icons or assets related to our PWA, you can always traverse to `assets/icons` folder in the `src` directory. After you have added your own app icons for the sizes mentioned inside the `manifest.json` file you can run the `ng build` command again.
+
+The `ngsw-worker.js` file contains the service worker. To insert the service worker and let our angular app know about its existence is present and appended when we converted the command to turn our angular app into a PWA inside `src/app/app.module.ts` file.
+
+```js
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AppComponent } from './app.component';
+// NEW LINE ADDED BY @angular/pwa
+import { ServiceWorkerModule } from '@angular/service-worker';
+// NEW LINE ADDED BY @angular/pwa
+import { environment } from '../environments/environment';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    // NEW LINE ADDED BY @angular/pwa
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production
+    })
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+```
+
+Angular also installs two new dependencies which you can find inside the `package.json`.
+
+```json
+"dependencies" :{
+  "@angular/pwa": "^0.10.2",
+  "@angular/service-worker": "^6.1.0",
+  [...]
+}
+```
+
+The service worker is automatically enabled inside the file `angular.json` which contains the configuration information from the start, when we created this application. Also, inside `dist/ng-pwa-demo/index.html` file you will find two lines added.
+
+```html
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1976d2">
+```
+
+The manifest attribute is linking the `manifest.json` and `index.html`. The theme color tells the browser to show which color such as in the address bar. You see how much PWA configuration Angular CLI takes care of with just one command. Imagine, adding all that details manually in every file we have seen or mentioned in this section. I can say for myself, I will surely miss something or other until the next audit breaks or fails. With that, now let us run another audit and see how far we have reached. This is the latest audit report I have generated.
+
+(ss12)
+
+11 audits are being passed! The only one which is failing right now is related to HTTPS. That is the reason our current score is _92_. Once you host this app on deployment server such as **Firebase** which are secured by default and use HTTPS, you will be able to configure HTTPS and then all of the audits will pass.
+
+You can find the complete code for this application demo at the Github repository below.

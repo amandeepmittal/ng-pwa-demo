@@ -3,21 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Item {
-  hits: [];
   title: string;
   url: string;
 }
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private dataURL: string = 'http://hn.algolia.com/api/v1/search_by_date?tags=story';
+  private dataURL: string = 'https://api.hnpwa.com/v0/news/1.json';
 
   constructor(private httpClient: HttpClient) {}
 
   getData(): Observable<Item[]> {
-    return <Observable<Item[]>this.httpClient.get(this.dataURL);
+    return <Observable<Item[]>>this.httpClient.get(this.dataURL);
   }
 }
